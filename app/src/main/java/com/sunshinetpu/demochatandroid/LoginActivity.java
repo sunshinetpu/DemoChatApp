@@ -130,6 +130,7 @@ public class LoginActivity extends AppCompatActivity
         if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
+        //All permissions should be checked here.
         /*
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(mJidView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)

@@ -119,7 +119,11 @@ public class RoosterConnection implements ConnectionListener {
         final ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
         reconnectionManager.setEnabledPerDefault(true);
         reconnectionManager.enableAutomaticReconnection();
+
+        //for controlling group chat
         multiUserChatManager = MultiUserChatManager.getInstanceFor(mConnection);
+
+        //for controlling file transfer.
         mFileTransferManager = FileTransferManager.getInstanceFor(mConnection);
         mFileTransferManager.addFileTransferListener(new FileTransferListener() {
             @Override

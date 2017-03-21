@@ -47,7 +47,7 @@ public class WebRTCChatActivity extends Activity {
     private String mMyId;
     private String mPartnerId;
     private Button mButtonSetup;
-    private Button mButtonCall;
+    //private Button mButtonCall;
     private PeerConnectionFactory mPeerConnectionFactory;
     private GLSurfaceView mViewMe, mViewPartner;
     private PeerConnection mPeerConnection;
@@ -65,6 +65,16 @@ public class WebRTCChatActivity extends Activity {
     private static final int REMOTE_WIDTH = 25;
     private static final int REMOTE_HEIGHT = 25;
     private RendererCommon.ScalingType scalingType = SCALE_ASPECT_FILL;
+
+    /**
+     *
+     * Consider that both clients agree to perform a video call. We ignore the request/accept part
+     * So the peerConnectionClient is initialized immediately when activity is created.
+     * Client A will send the offer request to B. Then B send the answer request back to A.
+     * After exchanging the session description, A and B exchange the ICE candidates.
+     * Then BOOM.
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +91,7 @@ public class WebRTCChatActivity extends Activity {
         }
         Log.i("test","partner Id is " + mPartnerId);
         initPeerClient();
-        mButtonCall = (Button)findViewById(R.id.btn_call);
+        //mButtonCall = (Button)findViewById(R.id.btn_call);
         mButtonSetup = (Button) findViewById(R.id.btn_setup);
         mButtonSetup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +147,7 @@ public class WebRTCChatActivity extends Activity {
 
         MediaConstraints videoConstraints = new MediaConstraints();
 
-         VideoSource videoSource = mPeerConnectionFactory.createVideoSource(videoCapturer,videoConstraints);
+        VideoSource videoSource = mPeerConnectionFactory.createVideoSource(videoCapturer,videoConstraints);
         AudioSource audioSource = mPeerConnectionFactory.createAudioSource(new MediaConstraints());
         VideoTrack videoTrack = mPeerConnectionFactory.createVideoTrack("1",videoSource);
         AudioTrack audioTrack = mPeerConnectionFactory.createAudioTrack("2",audioSource);

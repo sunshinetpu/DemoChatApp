@@ -38,7 +38,10 @@ public class Chat2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_test);
         mChatView = (ChatView) findViewById(R.id.chat_view);
-
+        /**
+         * Here we use User model from ChatView UI library.
+         * When develop a production app we have to create our own chat view UI with our custom model.
+         */
         //User id
         int myId = 0;
         //User icon
@@ -108,6 +111,8 @@ public class Chat2Activity extends AppCompatActivity {
         contactJid = intent.getStringExtra("EXTRA_CONTACT_JID");
         setTitle(contactJid);
         mToGroup = false;
+
+        //For testing group chat
         if(contactJid.equals("FSI")) {
             Intent intent2 = new Intent(RoosterConnectionService.JOIN_GROUP);
             sendBroadcast(intent2);
@@ -130,6 +135,7 @@ public class Chat2Activity extends AppCompatActivity {
                 String path =  UriHelper.getPath(this,originalUri).getString(UriHelper.KEY_EXTRA_PATH);
 
                 boolean isImage = UriHelper.isImageFile(path);
+                //Selected image will be displayed immediately in chatview. Video currently is not shown. Just show messaging about state of transfer.
                 if(isImage) {
                     Message message = new Message.Builder()
                             .setUser(me)
@@ -190,6 +196,7 @@ public class Chat2Activity extends AppCompatActivity {
                         }else{
                             String path = intent.getStringExtra(RoosterConnectionService.BUNDLE_FILE_PATH);
                             boolean isImage = UriHelper.isImageFile(path);
+                            //Received image will be dislayed immediately.
                             if(isImage) {
                                 Message receivedMessage = new Message.Builder()
                                         .setUser(you)
