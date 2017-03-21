@@ -47,23 +47,26 @@ public class WebRTCChatActivity extends Activity {
     private String mMyId;
     private String mPartnerId;
     private Button mButtonSetup;
-    //private Button mButtonCall;
+    private Button mButtonStop;
     private PeerConnectionFactory mPeerConnectionFactory;
     private GLSurfaceView mViewMe, mViewPartner;
     private PeerConnection mPeerConnection;
     BroadcastReceiver mBroadcastReceiver;
     private GLSurfaceView mVideoView;
+    private VideoCapturer mVideoCapturer;
+    private boolean mIsStreaming = false;
+    private VideoSource mVideoSource;
+    private AudioSource mAudioSource;
 
-
-    private static final int LOCAL_X_CONNECTED = 72;
-    private static final int LOCAL_Y_CONNECTED = 72;
-    private static final int LOCAL_WIDTH_CONNECTED = 25;
-    private static final int LOCAL_HEIGHT_CONNECTED = 25;
+    private static final int LOCAL_X_CONNECTED = 0;
+    private static final int LOCAL_Y_CONNECTED = 52;
+    private static final int LOCAL_WIDTH_CONNECTED = 100;
+    private static final int LOCAL_HEIGHT_CONNECTED = 48;
     // Remote video screen position
     private static final int REMOTE_X = 0;
     private static final int REMOTE_Y = 0;
-    private static final int REMOTE_WIDTH = 25;
-    private static final int REMOTE_HEIGHT = 25;
+    private static final int REMOTE_WIDTH = 100;
+    private static final int REMOTE_HEIGHT = 48;
     private RendererCommon.ScalingType scalingType = SCALE_ASPECT_FILL;
 
     /**
@@ -91,7 +94,7 @@ public class WebRTCChatActivity extends Activity {
         }
         Log.i("test","partner Id is " + mPartnerId);
         initPeerClient();
-        //mButtonCall = (Button)findViewById(R.id.btn_call);
+        mButtonStop = (Button)findViewById(R.id.btn_stop);
         mButtonSetup = (Button) findViewById(R.id.btn_setup);
         mButtonSetup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +103,14 @@ public class WebRTCChatActivity extends Activity {
             }
         });
 
+        mButtonStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                disconnectPeer();
+            }
+        });
+
+        //mButtonStop.setEnabled(false);
     }
    // VideoRenderer.Callbacks localVideo = VideoRendererGui.create(0,0,0,0,scalingType,true);
 
@@ -143,20 +154,21 @@ public class WebRTCChatActivity extends Activity {
 
             }
         });
-        VideoCapturer videoCapturer = VideoCapturerAndroid.create(getNameOfFrontFacingDevice());
+        mVideoCapturer = VideoCapturerAndroid.create(getNameOfFrontFacingDevice());
 
         MediaConstraints videoConstraints = new MediaConstraints();
 
-        VideoSource videoSource = mPeerConnectionFactory.createVideoSource(videoCapturer,videoConstraints);
-        AudioSource audioSource = mPeerConnectionFactory.createAudioSource(new MediaConstraints());
-        VideoTrack videoTrack = mPeerConnectionFactory.createVideoTrack("1",videoSource);
-        AudioTrack audioTrack = mPeerConnectionFactory.createAudioTrack("2",audioSource);
+        mVideoSource = mPeerConnectionFactory.createVideoSource(mVideoCapturer,videoConstraints);
+        mAudioSource = mPeerConnectionFactory.createAudioSource(new MediaConstraints());
+        VideoTrack videoTrack = mPeerConnectionFactory.createVideoTrack("1",mVideoSource);
+        AudioTrack audioTrack = mPeerConnectionFactory.createAudioTrack("2",mAudioSource);
 
 
         try {
             VideoRenderer renderer = VideoRendererGui.createGui(LOCAL_X_CONNECTED,LOCAL_Y_CONNECTED,LOCAL_WIDTH_CONNECTED,LOCAL_HEIGHT_CONNECTED, scalingType,false);
             videoTrack.addRenderer(renderer);
             MediaStream mediaStream = mPeerConnectionFactory.createLocalMediaStream("streamlocal");
+
             mediaStream.addTrack(videoTrack);
             mediaStream.addTrack(audioTrack);
            // List<PeerConnection.IceServer> iceServers = new ArrayList<PeerConnection.IceServer>();
@@ -224,6 +236,17 @@ public class WebRTCChatActivity extends Activity {
         };
         IntentFilter filter = new IntentFilter(RoosterConnectionService.NEW_MESSAGE);
         registerReceiver(mBroadcastReceiver,filter);
+    }
+
+    private void disconnectPeer(){
+        if(mPeerConnection != null){
+            mIsStreaming = false;
+            mPeerConnection.dispose();
+            mVideoCapturer.dispose();
+            mVideoSource.stop();
+            mVideoSource.dispose();
+            mAudioSource.dispose();
+        }
     }
 
     private void processOffer(String msg){
@@ -378,6 +401,15 @@ public class WebRTCChatActivity extends Activity {
         @Override
         public void onIceConnectionChange(PeerConnection.IceConnectionState iceConnectionState) {
             Log.i("test","onIceConnection change " + iceConnectionState.toString());
+            if(iceConnectionState.equals(PeerConnection.IceConnectionState.DISCONNECTED) || iceConnectionState.equals(PeerConnection.IceConnectionState.CLOSED)){
+                Log.i("test","disconnected");
+                if(mIsStreaming){
+                   disconnectPeer();
+                }
+                finish();
+            }else if(iceConnectionState.equals(PeerConnection.IceConnectionState.CONNECTED)){
+                mIsStreaming = true;
+            }
         }
 
         @Override
@@ -404,6 +436,8 @@ public class WebRTCChatActivity extends Activity {
             try {
                 VideoRenderer renderer = VideoRendererGui.createGui(REMOTE_X,REMOTE_Y,REMOTE_WIDTH,REMOTE_HEIGHT, scalingType,true);
                 mediaStream.videoTracks.get(0).addRenderer(renderer);
+               // mButtonSetup.setEnabled(false);
+                //mButtonStop.setEnabled(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -413,6 +447,8 @@ public class WebRTCChatActivity extends Activity {
         @Override
         public void onRemoveStream(MediaStream mediaStream) {
             Log.i("test","onRemoveStream");
+
+
         }
 
         @Override
@@ -447,9 +483,16 @@ public class WebRTCChatActivity extends Activity {
         }
     }
 
+
     @Override
     protected void onPause() {
         unregisterReceiver(mBroadcastReceiver);
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        disconnectPeer();
+        super.onBackPressed();
     }
 }

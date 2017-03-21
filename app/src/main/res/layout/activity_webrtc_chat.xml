@@ -10,7 +10,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_setup"
-            android:text="Setup"/>
+            android:text="Start"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_stop"
+            android:text="Stop" />
     </LinearLayout>
     <android.opengl.GLSurfaceView
         android:id="@+id/video_view"
