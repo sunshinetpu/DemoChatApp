@@ -2,7 +2,7 @@
 Demo Android chat app using XMPP server OpenFire.
 Features:
 - Chat between 2 client (send texts, share images and transfer video).
-- Group chat (send texts).
+- Group chat (only send texts). Messages from friends currently are display as from one person. 
 - Voice/video call between 2 clients using webRTC.
 
 To Run app you have to install openFire server 
