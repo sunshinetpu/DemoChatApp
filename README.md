@@ -5,5 +5,9 @@ Features:
 - Group chat (send texts).
 - Voice/video call between 2 clients using webRTC.
 
-To Run app you have to install openFire server and change the server host, server name to yours.
-Currently use hard code for jabberd Id in the contact list. 
+To Run app you have to install openFire server 
+https://www.igniterealtime.org/projects/openfire/
+
+Then open file RoosterConnection and change the server host, server name to yours.
+
+Currently use hard code for jabberd Id in the contact list. Replace them with your new jabberId 
