@@ -10,7 +10,14 @@ https://www.igniterealtime.org/projects/openfire/
 
 Then open file RoosterConnection and change the server host, server name to yours.
 
+
 Currently use hard code for jabberd Id in the contact list. Replace them with your new jabberId 
+
+Server page:
+
+- user: admin, password: admin
+- user: fsi1, password: fsi1
+- user: fsi2, password: fsi2
 
 For more options in creating MediaConstraints you should check out this file:
 https://chromium.googlesource.com/external/webrtc/stable/talk/+/master/app/webrtc/mediaconstraintsinterface.h
