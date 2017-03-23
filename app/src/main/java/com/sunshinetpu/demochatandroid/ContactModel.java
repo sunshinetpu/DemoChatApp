@@ -34,16 +34,19 @@ public class ContactModel {
         //Create the Foods and add them to the list;
 
 
-        Contact contact1 = new Contact("minh2@192.168.8.182");
-        Contact contact2 = new Contact("sunshinetpu@192.168.8.182");
-        Contact contact3 = new Contact("minh3@192.168.8.182");
-        Contact contact4 = new Contact("FSI");
-        Contact contact5 = new Contact("MediaChat");
+        Contact contact1 = new Contact("fsi1@192.168.6.240");
+        Contact contact2 = new Contact("fsi2@192.168.6.240");
+
+        //FSI is for group chat
+        Contact contact3 = new Contact("FSI");
+
+        //MediaChat is for testing video call between 2 clients.
+        Contact contact4 = new Contact("MediaChat");
+
         mContacts.add(contact1);
         mContacts.add(contact2);
         mContacts.add(contact3);
         mContacts.add(contact4);
-        mContacts.add(contact5);
     }
 
     public List<Contact> getContacts()

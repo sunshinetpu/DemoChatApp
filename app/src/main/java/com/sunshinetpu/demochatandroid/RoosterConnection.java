@@ -37,8 +37,8 @@ import java.io.IOException;
  * Created by gakwaya on 4/28/2016.
  */
 public class RoosterConnection implements ConnectionListener {
-    private static final String DOMAIN = "192.168.8.182";
-    private static final String HOST = "192.168.8.182";
+    private static final String DOMAIN = "192.168.6.240";
+    private static final String HOST = "192.168.6.240";
     private static final int PORT = 5222;
     private static final String TAG = "RoosterConnection";
     private static final String ROOM_NAME = "fsi";
@@ -293,7 +293,7 @@ public class RoosterConnection implements ConnectionListener {
     private void joinGroup(){
 
 
-        mMultiUserChat  = multiUserChatManager.getMultiUserChat(ROOM_NAME + "@conference.192.168.8.182");
+        mMultiUserChat  = multiUserChatManager.getMultiUserChat(ROOM_NAME + "@conference.192.168.6.240");
         mMultiUserChat.addMessageListener(mGroupchatMessageListener);
 
 

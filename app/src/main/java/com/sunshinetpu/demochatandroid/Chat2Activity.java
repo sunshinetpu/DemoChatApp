@@ -28,11 +28,11 @@ import com.github.bassaer.chatmessageview.views.ChatView;
 public class Chat2Activity extends AppCompatActivity {
     private static final String TAG ="ChatActivity";
 
-    private String contactJid;
+    private String mContactJid;
     private BroadcastReceiver mBroadcastReceiver;
     private boolean mToGroup = false;
     private ChatView mChatView;
-    private User me,you;
+    private User mUserMe,mUserYou;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +53,8 @@ public class Chat2Activity extends AppCompatActivity {
         Bitmap yourIcon = BitmapFactory.decodeResource(getResources(), R.drawable.face_1);
         String yourName = "Friend";
 
-        me = new User(myId, myName, myIcon);
-        you = new User(yourId, yourName, yourIcon);
+        mUserMe = new User(myId, myName, myIcon);
+        mUserYou = new User(yourId, yourName, yourIcon);
 
 
         mChatView.setOnClickSendButtonListener(new View.OnClickListener() {
@@ -73,13 +73,13 @@ public class Chat2Activity extends AppCompatActivity {
                     intent.putExtra(RoosterConnectionService.BUNDLE_TYPE,RoosterConnectionService.MESSAGE_TYPE_TEXT);
                     intent.putExtra(RoosterConnectionService.BUNDLE_MESSAGE_BODY,
                             mChatView.getInputText());
-                    intent.putExtra(RoosterConnectionService.BUNDLE_TO, contactJid);
+                    intent.putExtra(RoosterConnectionService.BUNDLE_TO, mContactJid);
 
                     sendBroadcast(intent);
 
                     //Update the chat view.
                     Message message = new Message.Builder()
-                            .setUser(me)
+                            .setUser(mUserMe)
                             .setRightMessage(true)
                             .setMessageText(mChatView.getInputText())
                             .hideIcon(true)
@@ -108,12 +108,12 @@ public class Chat2Activity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        contactJid = intent.getStringExtra("EXTRA_CONTACT_JID");
-        setTitle(contactJid);
+        mContactJid = intent.getStringExtra("EXTRA_CONTACT_JID");
+        setTitle(mContactJid);
         mToGroup = false;
 
         //For testing group chat
-        if(contactJid.equals("FSI")) {
+        if(mContactJid.equals("FSI")) {
             Intent intent2 = new Intent(RoosterConnectionService.JOIN_GROUP);
             sendBroadcast(intent2);
             mToGroup = true;
@@ -138,7 +138,7 @@ public class Chat2Activity extends AppCompatActivity {
                 //Selected image will be displayed immediately in chatview. Video currently is not shown. Just show messaging about state of transfer.
                 if(isImage) {
                     Message message = new Message.Builder()
-                            .setUser(me)
+                            .setUser(mUserMe)
                             .setRightMessage(true)
                             .setType(Message.Type.PICTURE)
                             .setPicture(BitmapFactory.decodeFile(path))
@@ -154,7 +154,7 @@ public class Chat2Activity extends AppCompatActivity {
                 intent.putExtra(RoosterConnectionService.BUNDLE_TYPE,RoosterConnectionService.MESSAGE_TYPE_FILE);
                 intent.putExtra(RoosterConnectionService.BUNDLE_FILE_PATH,
                         path);
-                intent.putExtra(RoosterConnectionService.BUNDLE_TO, contactJid);
+                intent.putExtra(RoosterConnectionService.BUNDLE_TO, mContactJid);
 
                 sendBroadcast(intent);
             }
@@ -181,10 +181,10 @@ public class Chat2Activity extends AppCompatActivity {
                         if(type.equals(RoosterConnectionService.MESSAGE_TYPE_TEXT)) {
                             String body = intent.getStringExtra(RoosterConnectionService.BUNDLE_MESSAGE_BODY);
 
-                            if (from.equals(contactJid) || mToGroup) {
+                            if (from.equals(mContactJid) || mToGroup) {
                                 // mChatView.receiveMessage(body);
                                 Message receivedMessage = new Message.Builder()
-                                        .setUser(you)
+                                        .setUser(mUserYou)
                                         .setRightMessage(false)
                                         .setMessageText(body)
                                         .build();
@@ -199,7 +199,7 @@ public class Chat2Activity extends AppCompatActivity {
                             //Received image will be dislayed immediately.
                             if(isImage) {
                                 Message receivedMessage = new Message.Builder()
-                                        .setUser(you)
+                                        .setUser(mUserMe)
                                         .setRightMessage(false)
                                         .setType(Message.Type.PICTURE)
                                         .setPicture(BitmapFactory.decodeFile(path))
@@ -272,7 +272,7 @@ public class Chat2Activity extends AppCompatActivity {
 
     private void addInfoMessage(String msg){
         Message infoMessage = new Message.Builder()
-                .setUser(you)
+                .setUser(mUserYou)
                 .hideIcon(true)
                 .setUsernameVisibility(false)
                 .setRightMessage(true)

@@ -17,7 +17,7 @@ public class ContactListActivity extends AppCompatActivity {
 
     private static final String TAG = "ContactListActivity";
 
-    private RecyclerView contactsRecyclerView;
+    private RecyclerView mContactsRecyclerView;
     private ContactAdapter mAdapter;
     private String mCurrentUserId;
 
@@ -26,14 +26,14 @@ public class ContactListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
 
-        contactsRecyclerView = (RecyclerView) findViewById(R.id.contact_list_recycler_view);
-        contactsRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+        mContactsRecyclerView = (RecyclerView) findViewById(R.id.contact_list_recycler_view);
+        mContactsRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
         ContactModel model = ContactModel.get(getBaseContext());
         List<Contact> contacts = model.getContacts();
 
         mAdapter = new ContactAdapter(contacts);
-        contactsRecyclerView.setAdapter(mAdapter);
+        mContactsRecyclerView.setAdapter(mAdapter);
         mCurrentUserId = getIntent().getStringExtra("id");
     }
 

@@ -42,14 +42,14 @@ import static org.webrtc.RendererCommon.ScalingType.SCALE_ASPECT_FILL;
  */
 
 public class WebRTCChatActivity extends Activity {
-    private final String USER1_ID = "minh2@192.168.8.182";
-    private final String USER2_ID = "minh3@192.168.8.182";
+    private final String USER1_ID = "fsi1@192.168.6.240";
+    private final String USER2_ID = "fsi2@192.168.6.240";
     private String mMyId;
     private String mPartnerId;
     private Button mButtonSetup;
     private Button mButtonStop;
     private PeerConnectionFactory mPeerConnectionFactory;
-    private GLSurfaceView mViewMe, mViewPartner;
+    //private GLSurfaceView mViewMe, mViewPartner;
     private PeerConnection mPeerConnection;
     BroadcastReceiver mBroadcastReceiver;
     private GLSurfaceView mVideoView;
@@ -201,6 +201,7 @@ public class WebRTCChatActivity extends Activity {
             MediaConstraints mediaConstraints = new MediaConstraints();
             mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
             mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
+
             //pcConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
 
             mPeerConnection = mPeerConnectionFactory.createPeerConnection(iceServers,mediaConstraints ,peerConnectionObserver );
@@ -228,7 +229,7 @@ public class WebRTCChatActivity extends Activity {
                         if (type.equals(RoosterConnectionService.MESSAGE_TYPE_TEXT)) {
                             String body = intent.getStringExtra(RoosterConnectionService.BUNDLE_MESSAGE_BODY);
                             Log.i("test", "receive new message " + body);
-                            processOffer(body);
+                            processPacket(body);
                         }
 
                 }
@@ -249,7 +250,7 @@ public class WebRTCChatActivity extends Activity {
         }
     }
 
-    private void processOffer(String msg){
+    private void processPacket(String msg){
         try {
             JSONObject jsonObject = new JSONObject(msg);
             String type = jsonObject.getString("type");
@@ -436,8 +437,6 @@ public class WebRTCChatActivity extends Activity {
             try {
                 VideoRenderer renderer = VideoRendererGui.createGui(REMOTE_X,REMOTE_Y,REMOTE_WIDTH,REMOTE_HEIGHT, scalingType,true);
                 mediaStream.videoTracks.get(0).addRenderer(renderer);
-               // mButtonSetup.setEnabled(false);
-                //mButtonStop.setEnabled(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
