@@ -19,5 +19,8 @@ Server page:
 - user: fsi1, password: fsi1
 - user: fsi2, password: fsi2
 
+You can download demo apk file (no proguard) here:
+https://drive.google.com/file/d/0B2prAz-G4KUebmVXSjR6ME5Lalk/view?usp=sharing
+
 For more options in creating MediaConstraints you should check out this file:
 https://chromium.googlesource.com/external/webrtc/stable/talk/+/master/app/webrtc/mediaconstraintsinterface.h
