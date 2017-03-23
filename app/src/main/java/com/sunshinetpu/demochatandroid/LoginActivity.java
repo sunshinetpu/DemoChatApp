@@ -23,6 +23,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.wang.avi.AVLoadingIndicatorView;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -43,7 +46,7 @@ public class LoginActivity extends AppCompatActivity
     // UI references.
     private AutoCompleteTextView mJidView;
     private EditText mPasswordView;
-    private View mProgressView;
+    private AVLoadingIndicatorView mProgressView;
     private View mLoginFormView;
     private BroadcastReceiver mBroadcastReceiver;
     private Context mContext;
@@ -77,7 +80,7 @@ public class LoginActivity extends AppCompatActivity
         });
 
         mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        mProgressView = (AVLoadingIndicatorView)findViewById(R.id.avi);
         mContext = this;
     }
 
@@ -102,16 +105,22 @@ public class LoginActivity extends AppCompatActivity
                         //Show the main app window
                         String id = intent.getStringExtra("id");
                         showProgress(false);
+                        mProgressView.hide();
                         Intent i2 = new Intent(mContext,ContactListActivity.class);
                         i2.putExtra("id",id);
                         startActivity(i2);
                         finish();
+                        break;
+                    case RoosterConnectionService.UI_LOGIN_FAILED:
+                        mProgressView.hide();
+                        Toast.makeText(getApplicationContext(),"Login failed",Toast.LENGTH_LONG).show();
                         break;
                 }
 
             }
         };
         IntentFilter filter = new IntentFilter(RoosterConnectionService.UI_AUTHENTICATED);
+        filter.addAction(RoosterConnectionService.UI_LOGIN_FAILED);
         this.registerReceiver(mBroadcastReceiver, filter);
     }
 
@@ -213,6 +222,7 @@ public class LoginActivity extends AppCompatActivity
 
             //Save the credentials and login
             saveCredentialsAndLogin();
+            mProgressView.show();
 
         }
     }

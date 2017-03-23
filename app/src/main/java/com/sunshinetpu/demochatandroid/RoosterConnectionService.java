@@ -20,6 +20,7 @@ public class RoosterConnectionService extends Service {
     private static final String TAG ="RoosterService";
 
     public static final String UI_AUTHENTICATED = "com.blikoon.rooster.uiauthenticated";
+    public static final String UI_LOGIN_FAILED = "login.failed";
     public static final String SEND_MESSAGE = "com.blikoon.rooster.sendmessage";
     public static final String BUNDLE_MESSAGE_BODY = "b_body";
     public static final String BUNDLE_TO = "b_to";
@@ -97,6 +98,8 @@ public class RoosterConnectionService extends Service {
             Log.d(TAG,"Something went wrong while connecting ,make sure the credentials are right and try again");
             e.printStackTrace();
             //Stop the service all together.
+            Intent i = new Intent(RoosterConnectionService.UI_LOGIN_FAILED);
+            sendBroadcast(i);
             stopSelf();
         }
 
