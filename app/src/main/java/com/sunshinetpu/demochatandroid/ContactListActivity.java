@@ -114,4 +114,12 @@ public class ContactListActivity extends AppCompatActivity {
             return mContacts.size();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent i1 = new Intent(this,RoosterConnectionService.class);
+        i1.putExtra("cmd","stop");
+        startService(i1);
+        super.onBackPressed();
+    }
 }

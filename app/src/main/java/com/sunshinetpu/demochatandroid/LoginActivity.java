@@ -221,6 +221,7 @@ public class LoginActivity extends AppCompatActivity
     {
         //Start the service
         Intent i1 = new Intent(this,RoosterConnectionService.class);
+        i1.putExtra("cmd","start");
         i1.putExtra("user",mJidView.getText().toString());
         i1.putExtra("pwd",mPasswordView.getText().toString());
         startService(i1);

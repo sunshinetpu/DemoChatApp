@@ -153,9 +153,14 @@ public class RoosterConnectionService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG,"onStartCommand()");
-        userName = intent.getStringExtra("user");
-        passWord = intent.getStringExtra("pwd");
-        start();
+        String cmd = intent.getStringExtra("cmd");
+        if(cmd.equals("start")) {
+            userName = intent.getStringExtra("user");
+            passWord = intent.getStringExtra("pwd");
+            start();
+        }else{
+            stopSelf();
+        }
         return Service.START_STICKY;
         //RETURNING START_STICKY CAUSES OUR CODE TO STICK AROUND WHEN THE APP ACTIVITY HAS DIED.
     }
