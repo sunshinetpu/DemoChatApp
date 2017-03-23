@@ -97,6 +97,10 @@ public class Chat2Activity extends AppCompatActivity {
         mChatView.setOnClickOptionButtonListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mToGroup){
+                    Toast.makeText(getApplicationContext(),"Sharing files in group is still not implemented",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 Intent intent2 = new Intent(Intent.ACTION_OPEN_DOCUMENT, null);
                 intent2.setType("*/*");
                 String[] extraMimeTypes = {"image/*", "video/*"};
